@@ -5,13 +5,12 @@ import base64
 from datetime import datetime
 server = Flask(__name__)
 
-#server.config['static_folder'] = 'CHATAPP/static'
-#define env variable
-os.environ["ROOM_PATH"] = "./rooms"
-server.secret_key="123"
+room_files_path = os.getenv('ROOM_FILES_PATH')
+users_path = os.getenv('USERS_PATH')
+server.secret_key="chatApp@Chaya_Lipshitz"
 
 def chechUserExist(username,password):
-   with open('users.csv', "r") as usersExist:
+   with open(room_files_path, "r") as usersExist:
         users=csv.reader(usersExist)
         for user in users:
             if(user[0] == username and decode_password(user[1]) == password):
@@ -55,7 +54,7 @@ def register():
         else:
             encrypted_password = encode_password(password)
         #כתיבה לקובץ
-            with open("users.csv", 'w') as file:
+            with open(room_files_path, 'w') as file:
                 writer = csv.writer(file)
                 writer.writerow([username, encrypted_password])
             return redirect('login')
@@ -70,7 +69,7 @@ def lobby():
             #print("exist in:" )
             return "exist"
         else:
-            file = open('./rooms/'+ new_room +'.txt', 'w+')
+            file = open(room_files_path + new_room +'.txt', 'w+')
             file.close()
             return redirect('chat/' + new_room)
             #return redirect('/chat/' + new_room, room=new_room)
@@ -88,7 +87,7 @@ def chat(room):
 
 @server.route('/api/chat/<room>', methods = ['GET','POST'])
 def manage_chat(room):
-    file_path='./rooms/'+ room +'.txt'
+    file_path=room_files_path + room +'.txt'
     user= session.get('username')
     if user==None:
         user="guest"
