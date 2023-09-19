@@ -1,13 +1,14 @@
 # set base image (host OS)
 FROM python:3.9-slim as builder
 # set the working directory in the container
-FROM builder as build1
-RUN update-ca-certificates
+
 # Enviroment variables
 ENV ROOM_FILES_PATH "rooms/"
 ENV USERS_PATH "users.csv"
 ENV FLASK_ENV development
 
+FROM builder as build1
+RUN update-ca-certificates
 WORKDIR /code
 # copy the dependencies file to the working directory
 

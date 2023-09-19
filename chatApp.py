@@ -5,12 +5,12 @@ import base64
 from datetime import datetime
 server = Flask(__name__)
 
-room_files_path = os.getenv('ROOM_FILES_PATH')
-users_path = os.getenv('USERS_PATH')
+room_files_path = str(os.getenv('ROOM_FILES_PATH'))
+users_path = str(os.getenv('USERS_PATH'))
 server.secret_key="chatApp@Chaya_Lipshitz"
 
 def chechUserExist(username,password):
-   with open(room_files_path, "r") as usersExist:
+   with open(users_path, "r") as usersExist:
         users=csv.reader(usersExist)
         for user in users:
             if(user[0] == username and decode_password(user[1]) == password):
@@ -30,6 +30,9 @@ def decode_password(user_pass):
     pass_bytes = base64.b64decode(base64_bytes)
     user_pass = pass_bytes.decode('ascii')
     return user_pass
+@server.route("/", methods=['GET','POST'])
+def index(): 
+    return redirect('/register')
 
 @server.route("/login", methods=['GET','POST'])
 def login():
@@ -54,7 +57,7 @@ def register():
         else:
             encrypted_password = encode_password(password)
         #כתיבה לקובץ
-            with open(room_files_path, 'w') as file:
+            with open(users_path, 'w') as file:
                 writer = csv.writer(file)
                 writer.writerow([username, encrypted_password])
             return redirect('login')
@@ -64,15 +67,14 @@ def register():
 def lobby():
    rooms = os.listdir('rooms/')
    if request.method == 'POST':
-        new_room = request.form['new_room']
-        if (str(new_room) + '.txt') in rooms:
+        new_room = request.form['new_room'] + '.txt'
+        if (str(new_room)) in rooms:
             #print("exist in:" )
             return "exist"
         else:
-            file = open(room_files_path + new_room +'.txt', 'w+')
+            file = open(room_files_path + new_room, 'w+')
             file.close()
-            return redirect('chat/' + new_room)
-            #return redirect('/chat/' + new_room, room=new_room)
+            rooms.append(new_room)
    all_rooms=[x[:-4] for x in rooms]
    return render_template("lobby.html", all_rooms = all_rooms) 
 
@@ -107,6 +109,11 @@ def manage_chat(room):
             content = f.read() 
             f.close()
     return content
+
+@server.route("/api/chat/clear/<room>", methods = ['POST'])
+def clear(room):
+    with open(room_files_path+str(room)+".txt", 'w') as file:
+        file.write("")
     
 if __name__ == "__main__":
     server.run(host='0.0.0.0')
