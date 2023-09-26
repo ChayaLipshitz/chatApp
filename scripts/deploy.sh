@@ -26,12 +26,12 @@ if [ "$IMAGE_EXISTS" -gt 0 ]; then
   # If the user chooses to rebuild the image, delete the existing one
   if [ "$REBUILD" = "Y" ]; then
     echo "Deleting existing image..."
-    docker rmi $version
+    docker rmi my-chat-app:$version
   fi
 fi
 
 # Build the image
-docker build -t $version .
+docker build -t my-chat-app:$version .
 
 # Tag the app and the image
 git tag v$version $commit_hash
