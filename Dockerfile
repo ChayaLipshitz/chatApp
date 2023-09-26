@@ -24,5 +24,8 @@ RUN mkdir /data  && \
 # command to run on container start
 CMD [ "python", "./chatApp.py" ]
 
+# Helth check
+HEALTHCHECK CMD ["curl", "-f", "http://localhost:5000/health"] INTERVAL=10s TIMEOUT=3s
+
 # copy the content of the local src directory to the working directory
 COPY . .

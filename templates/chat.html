@@ -40,8 +40,8 @@
 
   $(document).ready(function () {
     $("#chatbox").text("Loading chat...");
-    $("#clearBtn").click(cleardata)
     $("#sendBtn").click(sendmessage)
+    $("#clearBtn").click(cleardata)
     window.setTimeout(updateChat, 1500);
   });
 
@@ -54,7 +54,7 @@
     Message:<input name="msg" type=text>
     <input id="sendBtn" type="button" value="send">
   </form>
-  <input id="clearBtn" type="button" value="clear" onclick="cleardata()">
+  <input method="POST" action="/api/chat/clear" id="clearBtn" type="button" value="clear" onclick="cleardata()">
   <pre id="chatbox">Loading...</pre>0.
   <br>
   

@@ -111,9 +111,19 @@ def manage_chat(room):
     return content
 
 @server.route("/api/chat/clear/<room>", methods = ['POST'])
-def clear(room):
-    with open(room_files_path+str(room)+".txt", 'w') as file:
+def clear(room):    
+    # username = session['username']
+    # with open(f'{room_files_path}{room}.txt', 'r') as file:
+    #     lines = file.readlines()
+    #     print(lines)
+    # lines = str(filter(lambda line: len(line)>=3 and line.split(' ')[2] != username, lines))
+    # with open(f'{room_files_path}/{room}.txt', 'w') as file:
+    #     file.writelines(lines)
+    # # messages=getMessages(room)
+    # return lines
+    with open(f'{room_files_path}{room}.txt', 'w') as file:
         file.write("")
+        
     
 if __name__ == "__main__":
     server.run(host='0.0.0.0')
