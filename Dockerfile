@@ -1,6 +1,5 @@
 # set base image (host OS)
 FROM python:3.9-slim as builder
-# set the working directory in the container
 
 # Enviroment variables
 ENV ROOM_FILES_PATH "rooms/"
@@ -12,7 +11,7 @@ FROM builder as build1
 
 RUN update-ca-certificates
 
-# create the dir inthe container:
+# set the working directory in the container
 WORKDIR /code
 
 # create volume:
