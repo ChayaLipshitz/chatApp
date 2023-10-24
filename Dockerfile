@@ -7,14 +7,21 @@ ENV ROOM_FILES_PATH "rooms/"
 ENV USERS_PATH "users.csv"
 ENV FLASK_ENV development
 
+# first builder:
 FROM builder as build1
-RUN update-ca-certificates
-WORKDIR /code
-# copy the dependencies file to the working directory
 
+RUN update-ca-certificates
+
+# create the dir inthe container:
+WORKDIR /code
+
+# create volume:
 VOLUME my-volume:/code
 
+# second builder:
 FROM builder as build2
+
+# copy the dependencies file to the working directory
 COPY requirements.txt .
 
 # install dependencies
@@ -24,7 +31,7 @@ RUN mkdir /data  && \
 # command to run on container start
 CMD [ "python", "./chatApp.py" ]
 
-# Helth check
+# Helth check:
 HEALTHCHECK CMD ["curl", "-f", "http://localhost:5000/health"] INTERVAL=10s TIMEOUT=3s
 
 # copy the content of the local src directory to the working directory
